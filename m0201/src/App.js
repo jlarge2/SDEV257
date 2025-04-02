@@ -1,24 +1,23 @@
-import { Platform, StyleSheet, StatusBar } from "react-native";
-export default StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "ghostwhite",
-    ...Platform.select({
-      ios: { paddingTop: 20 },
-      android: { paddingTop: StatusBar.currentHeight },
-    }),
-  },
-  box: {
-    width: 100,
-    height: 100,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "lightgray",
-  },
-  boxText: {
-    color: "darkslategray",
-    fontWeight: "bold",
-  },
+import { StatusBar } from "expo-status-bar";
+import { StyleSheet, Text, View } from "react-native";
+export default function App() {
+  return (
+    <View style={styles.container}>
+      <Text style={styles.text}>
+        Hi, my name is Jennifer, and I am a mobile developer
+      </Text>
+      <StatusBar style="auto" />
+    </View>
+  );
+}
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  text: {
+    fontWeight: "bold",
+  },
 });

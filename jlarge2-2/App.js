@@ -8,7 +8,6 @@ import Planets from "./Planets.js";
 import Spaceships from "./Spaceships.js";
 import Films from "./Films.js";
 
-// Create instances of navigators
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 const Tab = createBottomTabNavigator();

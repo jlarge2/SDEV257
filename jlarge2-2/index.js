@@ -15,7 +15,7 @@ function Home({ navigation }) {
     <View style={styles.container}>
       <Button title="Films" onPress={() => navigation.navigate('Films')} />
       <Button title="Planets" onPress={() => navigation.navigate('Planets')} />
-      <Button title="paceships" onPress={() => navigation.navigate('Spaceships')} />
+      <Button title="Spaceships" onPress={() => navigation.navigate('Spaceships')} />
     </View>
   );
 }

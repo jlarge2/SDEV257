@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, FlatList, StatusBar, ActivityIndicator } from "react-native";
+import { View, Text, FlatList, StatusBar, ActivityIndicator, TextInput, Button, Modal } from "react-native";
 import styles from "./styles";
 
 export default function Planets() {
   const [planets, setPlanets] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchText, setSearchText] = useState("");
+  const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
     const fetchPlanets = async () => {
@@ -30,6 +32,10 @@ export default function Planets() {
     fetchPlanets();
   }, []);
 
+  const handleSearchSubmit = () => {
+    setModalVisible(true);
+  };
+
   if (loading) {
     return (
       <View style={styles.container}>
@@ -41,6 +47,26 @@ export default function Planets() {
   return (
     <View style={styles.container}>
       <StatusBar barStyle="dark-content" />
+      <TextInput
+        style={styles.searchBar}
+        placeholder="Search..."
+        value={searchText}
+        onChangeText={setSearchText}
+      />
+      <Button title="Search" onPress={handleSearchSubmit} />
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalText}>You searched for: {searchText}</Text>
+            <Button title="Close" onPress={() => setModalVisible(false)} />
+          </View>
+        </View>
+      </Modal>
       <Text style={styles.title}>Planets</Text>
       <FlatList
         data={planets}

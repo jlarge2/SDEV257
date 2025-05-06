@@ -1,24 +1,23 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, FlatList, StatusBar, ActivityIndicator } from "react-native";
+import { View, Text, FlatList, StatusBar, ActivityIndicator, TextInput, Button, Modal } from "react-native";
 import styles from "./styles";
 
 export default function Films() {
   const [films, setFilms] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchText, setSearchText] = useState("");
+  const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
     const fetchFilms = async () => {
       try {
         const response = await fetch("https://www.swapi.tech/api/films/");
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
         const data = await response.json();
-        
+
         const detailedFilms = data.result.map((film) => film.properties);
         setFilms(detailedFilms);
       } catch (error) {
-        console.error("Error fetching films:", error.message);
+        console.error("Error fetching films:", error);
       } finally {
         setLoading(false);
       }
@@ -27,10 +26,14 @@ export default function Films() {
     fetchFilms();
   }, []);
 
+  const handleSearchSubmit = () => {
+    setModalVisible(true);
+  };
+
   if (loading) {
     return (
       <View style={styles.container}>
-        <ActivityIndicator size="large" color="silver" />
+        <ActivityIndicator size={"large"} color={"silver"} />
       </View>
     );
   }
@@ -38,6 +41,26 @@ export default function Films() {
   return (
     <View style={styles.container}>
       <StatusBar barStyle="dark-content" />
+      <TextInput
+        style={styles.searchBar}
+        placeholder="Search..."
+        value={searchText}
+        onChangeText={setSearchText}
+      />
+      <Button title="Search" onPress={handleSearchSubmit} />
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalText}>You searched for: {searchText}</Text>
+            <Button title="Close" onPress={() => setModalVisible(false)} />
+          </View>
+        </View>
+      </Modal>
       <Text style={styles.title}>Films</Text>
       <FlatList
         data={films}
@@ -48,8 +71,6 @@ export default function Films() {
             <Text>Director: {item.director}</Text>
             <Text>Producer: {item.producer}</Text>
             <Text>Release Date: {item.release_date}</Text>
-            <Text>Opening Crawl:</Text>
-            <Text>{item.opening_crawl}</Text>
           </View>
         )}
       />

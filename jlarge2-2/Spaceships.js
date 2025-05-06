@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, FlatList, StatusBar, ActivityIndicator } from "react-native";
+import { View, Text, FlatList, StatusBar, ActivityIndicator, TextInput, Button, Modal } from "react-native";
 import styles from "./styles";
 
 export default function Spaceships() {
   const [spaceships, setSpaceships] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchText, setSearchText] = useState("");
+  const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
     const fetchSpaceships = async () => {
@@ -18,8 +20,8 @@ export default function Spaceships() {
           return shipData.result.properties;
         });
 
-        const detailedShips = await Promise.all(fetchDetails);
-        setSpaceships(detailedShips);
+        const detailedSpaceships = await Promise.all(fetchDetails);
+        setSpaceships(detailedSpaceships);
       } catch (error) {
         console.error("Error fetching spaceships:", error);
       } finally {
@@ -30,10 +32,14 @@ export default function Spaceships() {
     fetchSpaceships();
   }, []);
 
+  const handleSearchSubmit = () => {
+    setModalVisible(true);
+  };
+
   if (loading) {
     return (
       <View style={styles.container}>
-        <ActivityIndicator size="large" color="silver" />
+        <ActivityIndicator size={"large"} color={"silver"} />
       </View>
     );
   }
@@ -41,6 +47,26 @@ export default function Spaceships() {
   return (
     <View style={styles.container}>
       <StatusBar barStyle="dark-content" />
+      <TextInput
+        style={styles.searchBar}
+        placeholder="Search..."
+        value={searchText}
+        onChangeText={setSearchText}
+      />
+      <Button title="Search" onPress={handleSearchSubmit} />
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalText}>You searched for: {searchText}</Text>
+            <Button title="Close" onPress={() => setModalVisible(false)} />
+          </View>
+        </View>
+      </Modal>
       <Text style={styles.title}>Spaceships</Text>
       <FlatList
         data={spaceships}
@@ -49,13 +75,12 @@ export default function Spaceships() {
           <View style={styles.item}>
             <Text style={styles.itemTitle}>{item.name}</Text>
             <Text>Model: {item.model}</Text>
-            <Text>Class: {item.starship_class}</Text>
             <Text>Manufacturer: {item.manufacturer}</Text>
-            <Text>Cost in Credits: {item.cost_in_credits}</Text>
+            <Text>Cost: {item.cost_in_credits}</Text>
             <Text>Length: {item.length}</Text>
+            <Text>Max Speed: {item.max_atmosphering_speed}</Text>
             <Text>Crew: {item.crew}</Text>
             <Text>Passengers: {item.passengers}</Text>
-            <Text>Max Speed: {item.max_atmosphering_speed}</Text>
           </View>
         )}
       />

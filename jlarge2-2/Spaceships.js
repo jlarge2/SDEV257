@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, FlatList, StatusBar, ActivityIndicator, TextInput, Button, Modal } from "react-native";
+import { Swipeable } from "react-native-gesture-handler";
 import styles from "./styles";
 
 export default function Spaceships() {
@@ -7,7 +8,7 @@ export default function Spaceships() {
   const [loading, setLoading] = useState(true);
   const [searchText, setSearchText] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
-  const [filteredResults, setFilteredResults] = useState([]);
+  const [selectedSpaceship, setSelectedSpaceship] = useState(null);
 
   useEffect(() => {
     const fetchSpaceships = async () => {
@@ -33,13 +34,15 @@ export default function Spaceships() {
     fetchSpaceships();
   }, []);
 
-  const handleSearchSubmit = () => {
-    const results = spaceships.filter((ship) =>
-      ship.name.toLowerCase().includes(searchText.toLowerCase())
-    );
-    setFilteredResults(results);
+  const handleSwipe = (spaceship) => {
+    setSelectedSpaceship(spaceship);
     setModalVisible(true);
   };
+
+  const renderRightActions = () => (
+    <View style={styles.swipeAction}>
+    </View>
+  );
 
   if (loading) {
     return (
@@ -58,7 +61,6 @@ export default function Spaceships() {
         value={searchText}
         onChangeText={setSearchText}
       />
-      <Button title="Search" onPress={handleSearchSubmit} />
       <Modal
         animationType="slide"
         transparent={true}
@@ -67,26 +69,19 @@ export default function Spaceships() {
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalText}>Search Results:</Text>
-            {filteredResults.length > 0 ? (
-              <FlatList
-                data={filteredResults}
-                keyExtractor={(item) => item.name}
-                renderItem={({ item }) => (
-                  <View style={styles.item}>
-                    <Text style={styles.itemTitle}>{item.name}</Text>
-                    <Text>Model: {item.model}</Text>
-                    <Text>Manufacturer: {item.manufacturer}</Text>
-                    <Text>Cost: {item.cost_in_credits}</Text>
-                    <Text>Length: {item.length}</Text>
-                    <Text>Max Speed: {item.max_atmosphering_speed}</Text>
-                    <Text>Crew: {item.crew}</Text>
-                    <Text>Passengers: {item.passengers}</Text>
-                  </View>
-                )}
-              />
+            {selectedSpaceship ? (
+              <>
+                <Text style={styles.modalText}>Name: {selectedSpaceship.name}</Text>
+                <Text>Model: {selectedSpaceship.model}</Text>
+                <Text>Manufacturer: {selectedSpaceship.manufacturer}</Text>
+                <Text>Cost: {selectedSpaceship.cost_in_credits}</Text>
+                <Text>Length: {selectedSpaceship.length}</Text>
+                <Text>Max Speed: {selectedSpaceship.max_atmosphering_speed}</Text>
+                <Text>Crew: {selectedSpaceship.crew}</Text>
+                <Text>Passengers: {selectedSpaceship.passengers}</Text>
+              </>
             ) : (
-              <Text>No results found.</Text>
+              <Text style={styles.modalText}>No details available.</Text>
             )}
             <Button title="Close" onPress={() => setModalVisible(false)} />
           </View>
@@ -97,16 +92,21 @@ export default function Spaceships() {
         data={spaceships}
         keyExtractor={(item) => item.name}
         renderItem={({ item }) => (
-          <View style={styles.item}>
-            <Text style={styles.itemTitle}>{item.name}</Text>
-            <Text>Model: {item.model}</Text>
-            <Text>Manufacturer: {item.manufacturer}</Text>
-            <Text>Cost: {item.cost_in_credits}</Text>
-            <Text>Length: {item.length}</Text>
-            <Text>Max Speed: {item.max_atmosphering_speed}</Text>
-            <Text>Crew: {item.crew}</Text>
-            <Text>Passengers: {item.passengers}</Text>
-          </View>
+          <Swipeable
+            renderRightActions={renderRightActions}
+            onSwipeableRightOpen={() => handleSwipe(item)}
+          >
+            <View style={styles.item}>
+              <Text style={styles.itemTitle}>{item.name}</Text>
+              <Text>Model: {item.model}</Text>
+              <Text>Manufacturer: {item.manufacturer}</Text>
+              <Text>Cost: {item.cost_in_credits}</Text>
+              <Text>Length: {item.length}</Text>
+              <Text>Max Speed: {item.max_atmosphering_speed}</Text>
+              <Text>Crew: {item.crew}</Text>
+              <Text>Passengers: {item.passengers}</Text>
+            </View>
+          </Swipeable>
         )}
       />
     </View>

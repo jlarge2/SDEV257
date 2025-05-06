@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, FlatList, StatusBar, ActivityIndicator, TextInput, Button, Modal } from "react-native";
+import { Swipeable } from "react-native-gesture-handler";
 import styles from "./styles";
 
 export default function Planets() {
@@ -8,6 +9,7 @@ export default function Planets() {
   const [searchText, setSearchText] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
   const [filteredResults, setFilteredResults] = useState([]);
+  const [selectedPlanet, setSelectedPlanet] = useState(null);
 
   useEffect(() => {
     const fetchPlanets = async () => {
@@ -41,6 +43,11 @@ export default function Planets() {
     setModalVisible(true);
   };
 
+  const handleSwipe = (planet) => {
+    setSelectedPlanet(planet);
+    setModalVisible(true);
+  };
+
   if (loading) {
     return (
       <View style={styles.container}>
@@ -48,6 +55,11 @@ export default function Planets() {
       </View>
     );
   }
+
+  const renderRightActions = () => (
+    <View style={styles.swipeAction}>
+    </View>
+  );
 
   return (
     <View style={styles.container}>
@@ -67,26 +79,19 @@ export default function Planets() {
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalText}>Search Results:</Text>
-            {filteredResults.length > 0 ? (
-              <FlatList
-                data={filteredResults}
-                keyExtractor={(item) => item.name}
-                renderItem={({ item }) => (
-                  <View style={styles.item}>
-                    <Text style={styles.itemTitle}>{item.name}</Text>
-                    <Text>Climate: {item.climate}</Text>
-                    <Text>Terrain: {item.terrain}</Text>
-                    <Text>Population: {item.population}</Text>
-                    <Text>Diameter: {item.diameter}</Text>
-                    <Text>Gravity: {item.gravity}</Text>
-                    <Text>Orbital Period: {item.orbital_period}</Text>
-                    <Text>Rotation Period: {item.rotation_period}</Text>
-                  </View>
-                )}
-              />
+            {selectedPlanet ? (
+              <>
+                <Text style={styles.modalText}>Name: {selectedPlanet.name}</Text>
+                <Text>Climate: {selectedPlanet.climate}</Text>
+                <Text>Terrain: {selectedPlanet.terrain}</Text>
+                <Text>Population: {selectedPlanet.population}</Text>
+                <Text>Diameter: {selectedPlanet.diameter}</Text>
+                <Text>Gravity: {selectedPlanet.gravity}</Text>
+                <Text>Orbital Period: {selectedPlanet.orbital_period}</Text>
+                <Text>Rotation Period: {selectedPlanet.rotation_period}</Text>
+              </>
             ) : (
-              <Text>No results found.</Text>
+              <Text style={styles.modalText}>No results found.</Text>
             )}
             <Button title="Close" onPress={() => setModalVisible(false)} />
           </View>
@@ -97,16 +102,21 @@ export default function Planets() {
         data={planets}
         keyExtractor={(item) => item.name}
         renderItem={({ item }) => (
-          <View style={styles.item}>
-            <Text style={styles.itemTitle}>{item.name}</Text>
-            <Text>Climate: {item.climate}</Text>
-            <Text>Terrain: {item.terrain}</Text>
-            <Text>Population: {item.population}</Text>
-            <Text>Diameter: {item.diameter}</Text>
-            <Text>Gravity: {item.gravity}</Text>
-            <Text>Orbital Period: {item.orbital_period}</Text>
-            <Text>Rotation Period: {item.rotation_period}</Text>
-          </View>
+          <Swipeable
+            renderRightActions={renderRightActions}
+            onSwipeableRightOpen={() => handleSwipe(item)}
+          >
+            <View style={styles.item}>
+              <Text style={styles.itemTitle}>{item.name}</Text>
+              <Text>Climate: {item.climate}</Text>
+              <Text>Terrain: {item.terrain}</Text>
+              <Text>Population: {item.population}</Text>
+              <Text>Diameter: {item.diameter}</Text>
+              <Text>Gravity: {item.gravity}</Text>
+              <Text>Orbital Period: {item.orbital_period}</Text>
+              <Text>Rotation Period: {item.rotation_period}</Text>
+            </View>
+          </Swipeable>
         )}
       />
     </View>

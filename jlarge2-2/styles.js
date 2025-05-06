@@ -49,4 +49,11 @@ export default StyleSheet.create({
     textAlign: "center",
     fontSize: 16,
   },
+  swipeAction: {
+    justifyContent: "center",
+    backgroundColor: "transparent",
+    alignItems: "flex-end",
+    paddingHorizontal: 20,
+    height: "100%",
+  },
 });

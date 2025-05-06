@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, FlatList, StatusBar, ActivityIndicator, TextInput, Button, Modal } from "react-native";
+import { Swipeable } from "react-native-gesture-handler";
 import styles from "./styles";
 
 export default function Films() {
@@ -7,7 +8,7 @@ export default function Films() {
   const [loading, setLoading] = useState(true);
   const [searchText, setSearchText] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
-  const [filteredResults, setFilteredResults] = useState([]);
+  const [selectedFilm, setSelectedFilm] = useState(null);
 
   useEffect(() => {
     const fetchFilms = async () => {
@@ -27,13 +28,15 @@ export default function Films() {
     fetchFilms();
   }, []);
 
-  const handleSearchSubmit = () => {
-    const results = films.filter((film) =>
-      film.title.toLowerCase().includes(searchText.toLowerCase())
-    );
-    setFilteredResults(results);
+  const handleSwipe = (film) => {
+    setSelectedFilm(film);
     setModalVisible(true);
   };
+
+  const renderRightActions = () => (
+    <View style={styles.swipeAction}>
+    </View>
+  );
 
   if (loading) {
     return (
@@ -52,7 +55,6 @@ export default function Films() {
         value={searchText}
         onChangeText={setSearchText}
       />
-      <Button title="Search" onPress={handleSearchSubmit} />
       <Modal
         animationType="slide"
         transparent={true}
@@ -61,23 +63,17 @@ export default function Films() {
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalText}>Search Results:</Text>
-            {filteredResults.length > 0 ? (
-              <FlatList
-                data={filteredResults}
-                keyExtractor={(item) => item.title}
-                renderItem={({ item }) => (
-                  <View style={styles.item}>
-                    <Text style={styles.itemTitle}>{item.title}</Text>
-                    <Text>Director: {item.director}</Text>
-                    <Text>Producer: {item.producer}</Text>
-                    <Text>Release Date: {item.release_date}</Text>
-                    <Text>{item.opening_crawl}</Text>
-                  </View>
-                )}
-              />
+            {selectedFilm ? (
+              <>
+                <Text style={styles.modalText}>Title: {selectedFilm.title}</Text>
+                <Text>Director: {selectedFilm.director}</Text>
+                <Text>Producer: {selectedFilm.producer}</Text>
+                <Text>Release Date: {selectedFilm.release_date}</Text>
+                <Text>Opening Crawl:</Text>
+                <Text>{selectedFilm.opening_crawl}</Text>
+              </>
             ) : (
-              <Text>No results found.</Text>
+              <Text style={styles.modalText}>No details available.</Text>
             )}
             <Button title="Close" onPress={() => setModalVisible(false)} />
           </View>
@@ -88,13 +84,18 @@ export default function Films() {
         data={films}
         keyExtractor={(item) => item.title}
         renderItem={({ item }) => (
-          <View style={styles.item}>
-            <Text style={styles.itemTitle}>{item.title}</Text>
-            <Text>Director: {item.director}</Text>
-            <Text>Producer: {item.producer}</Text>
-            <Text>Release Date: {item.release_date}</Text>
-            <Text>{item.opening_crawl}</Text>
-          </View>
+          <Swipeable
+            renderRightActions={renderRightActions}
+            onSwipeableRightOpen={() => handleSwipe(item)}
+          >
+            <View style={styles.item}>
+              <Text style={styles.itemTitle}>{item.title}</Text>
+              <Text>Director: {item.director}</Text>
+              <Text>Producer: {item.producer}</Text>
+              <Text>Release Date: {item.release_date}</Text>
+              <Text>{item.opening_crawl}</Text>
+            </View>
+          </Swipeable>
         )}
       />
     </View>

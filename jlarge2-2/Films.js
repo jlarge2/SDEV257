@@ -7,6 +7,7 @@ export default function Films() {
   const [loading, setLoading] = useState(true);
   const [searchText, setSearchText] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
+  const [filteredResults, setFilteredResults] = useState([]);
 
   useEffect(() => {
     const fetchFilms = async () => {
@@ -27,6 +28,10 @@ export default function Films() {
   }, []);
 
   const handleSearchSubmit = () => {
+    const results = films.filter((film) =>
+      film.title.toLowerCase().includes(searchText.toLowerCase())
+    );
+    setFilteredResults(results);
     setModalVisible(true);
   };
 
@@ -56,7 +61,24 @@ export default function Films() {
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalText}>You searched for: {searchText}</Text>
+            <Text style={styles.modalText}>Search Results:</Text>
+            {filteredResults.length > 0 ? (
+              <FlatList
+                data={filteredResults}
+                keyExtractor={(item) => item.title}
+                renderItem={({ item }) => (
+                  <View style={styles.item}>
+                    <Text style={styles.itemTitle}>{item.title}</Text>
+                    <Text>Director: {item.director}</Text>
+                    <Text>Producer: {item.producer}</Text>
+                    <Text>Release Date: {item.release_date}</Text>
+                    <Text>{item.opening_crawl}</Text>
+                  </View>
+                )}
+              />
+            ) : (
+              <Text>No results found.</Text>
+            )}
             <Button title="Close" onPress={() => setModalVisible(false)} />
           </View>
         </View>
@@ -71,6 +93,7 @@ export default function Films() {
             <Text>Director: {item.director}</Text>
             <Text>Producer: {item.producer}</Text>
             <Text>Release Date: {item.release_date}</Text>
+            <Text>{item.opening_crawl}</Text>
           </View>
         )}
       />

@@ -7,6 +7,7 @@ export default function Planets() {
   const [loading, setLoading] = useState(true);
   const [searchText, setSearchText] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
+  const [filteredResults, setFilteredResults] = useState([]);
 
   useEffect(() => {
     const fetchPlanets = async () => {
@@ -33,6 +34,10 @@ export default function Planets() {
   }, []);
 
   const handleSearchSubmit = () => {
+    const results = planets.filter((planet) =>
+      planet.name.toLowerCase().includes(searchText.toLowerCase())
+    );
+    setFilteredResults(results);
     setModalVisible(true);
   };
 
@@ -62,7 +67,27 @@ export default function Planets() {
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalText}>You searched for: {searchText}</Text>
+            <Text style={styles.modalText}>Search Results:</Text>
+            {filteredResults.length > 0 ? (
+              <FlatList
+                data={filteredResults}
+                keyExtractor={(item) => item.name}
+                renderItem={({ item }) => (
+                  <View style={styles.item}>
+                    <Text style={styles.itemTitle}>{item.name}</Text>
+                    <Text>Climate: {item.climate}</Text>
+                    <Text>Terrain: {item.terrain}</Text>
+                    <Text>Population: {item.population}</Text>
+                    <Text>Diameter: {item.diameter}</Text>
+                    <Text>Gravity: {item.gravity}</Text>
+                    <Text>Orbital Period: {item.orbital_period}</Text>
+                    <Text>Rotation Period: {item.rotation_period}</Text>
+                  </View>
+                )}
+              />
+            ) : (
+              <Text>No results found.</Text>
+            )}
             <Button title="Close" onPress={() => setModalVisible(false)} />
           </View>
         </View>

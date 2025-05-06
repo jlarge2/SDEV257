@@ -7,6 +7,7 @@ export default function Spaceships() {
   const [loading, setLoading] = useState(true);
   const [searchText, setSearchText] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
+  const [filteredResults, setFilteredResults] = useState([]);
 
   useEffect(() => {
     const fetchSpaceships = async () => {
@@ -33,6 +34,10 @@ export default function Spaceships() {
   }, []);
 
   const handleSearchSubmit = () => {
+    const results = spaceships.filter((ship) =>
+      ship.name.toLowerCase().includes(searchText.toLowerCase())
+    );
+    setFilteredResults(results);
     setModalVisible(true);
   };
 
@@ -62,7 +67,27 @@ export default function Spaceships() {
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalText}>You searched for: {searchText}</Text>
+            <Text style={styles.modalText}>Search Results:</Text>
+            {filteredResults.length > 0 ? (
+              <FlatList
+                data={filteredResults}
+                keyExtractor={(item) => item.name}
+                renderItem={({ item }) => (
+                  <View style={styles.item}>
+                    <Text style={styles.itemTitle}>{item.name}</Text>
+                    <Text>Model: {item.model}</Text>
+                    <Text>Manufacturer: {item.manufacturer}</Text>
+                    <Text>Cost: {item.cost_in_credits}</Text>
+                    <Text>Length: {item.length}</Text>
+                    <Text>Max Speed: {item.max_atmosphering_speed}</Text>
+                    <Text>Crew: {item.crew}</Text>
+                    <Text>Passengers: {item.passengers}</Text>
+                  </View>
+                )}
+              />
+            ) : (
+              <Text>No results found.</Text>
+            )}
             <Button title="Close" onPress={() => setModalVisible(false)} />
           </View>
         </View>

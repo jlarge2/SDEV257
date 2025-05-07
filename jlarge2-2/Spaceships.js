@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, FlatList, StatusBar, ActivityIndicator, TextInput, Button, Modal } from "react-native";
+import React, { useEffect, useState, useRef } from "react";
+import { View, Text, FlatList, StatusBar, ActivityIndicator, TextInput, Button, Modal, Animated } from "react-native";
 import { Swipeable } from "react-native-gesture-handler";
 import styles from "./styles";
 
@@ -9,6 +9,7 @@ export default function Spaceships() {
   const [searchText, setSearchText] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedSpaceship, setSelectedSpaceship] = useState(null);
+  const fadeAnimations = useRef([]).current;
 
   useEffect(() => {
     const fetchSpaceships = async () => {
@@ -39,9 +40,45 @@ export default function Spaceships() {
     setModalVisible(true);
   };
 
+  const fadeIn = (index) => {
+    if (!fadeAnimations[index]) {
+      fadeAnimations[index] = new Animated.Value(0);
+    }
+    Animated.timing(fadeAnimations[index], {
+      toValue: 1,
+      duration: 500,
+      delay: index * 200, // Add a delay based on the item's index
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const renderItem = ({ item, index }) => {
+    fadeIn(index);
+    return (
+      <Animated.View
+        style={{ ...styles.item, opacity: fadeAnimations[index] }}
+      >
+        <Swipeable
+          renderRightActions={renderRightActions}
+          onSwipeableRightOpen={() => handleSwipe(item)}
+        >
+          <View>
+            <Text style={styles.itemTitle}>{item.name}</Text>
+            <Text>Model: {item.model}</Text>
+            <Text>Manufacturer: {item.manufacturer}</Text>
+            <Text>Cost: {item.cost_in_credits}</Text>
+            <Text>Length: {item.length}</Text>
+            <Text>Max Speed: {item.max_atmosphering_speed}</Text>
+            <Text>Crew: {item.crew}</Text>
+            <Text>Passengers: {item.passengers}</Text>
+          </View>
+        </Swipeable>
+      </Animated.View>
+    );
+  };
+
   const renderRightActions = () => (
-    <View style={styles.swipeAction}>
-    </View>
+    <View style={styles.swipeAction}></View>
   );
 
   if (loading) {
@@ -91,23 +128,7 @@ export default function Spaceships() {
       <FlatList
         data={spaceships}
         keyExtractor={(item) => item.name}
-        renderItem={({ item }) => (
-          <Swipeable
-            renderRightActions={renderRightActions}
-            onSwipeableRightOpen={() => handleSwipe(item)}
-          >
-            <View style={styles.item}>
-              <Text style={styles.itemTitle}>{item.name}</Text>
-              <Text>Model: {item.model}</Text>
-              <Text>Manufacturer: {item.manufacturer}</Text>
-              <Text>Cost: {item.cost_in_credits}</Text>
-              <Text>Length: {item.length}</Text>
-              <Text>Max Speed: {item.max_atmosphering_speed}</Text>
-              <Text>Crew: {item.crew}</Text>
-              <Text>Passengers: {item.passengers}</Text>
-            </View>
-          </Swipeable>
-        )}
+        renderItem={renderItem}
       />
     </View>
   );

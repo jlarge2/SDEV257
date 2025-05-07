@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, FlatList, StatusBar, ActivityIndicator, TextInput, Button, Modal } from "react-native";
+import React, { useEffect, useState, useRef } from "react";
+import { View, Text, FlatList, StatusBar, ActivityIndicator, TextInput, Button, Modal, Animated } from "react-native";
 import { Swipeable } from "react-native-gesture-handler";
 import styles from "./styles";
 
@@ -9,6 +9,7 @@ export default function Films() {
   const [searchText, setSearchText] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedFilm, setSelectedFilm] = useState(null);
+  const fadeAnimations = useRef([]).current;
 
   useEffect(() => {
     const fetchFilms = async () => {
@@ -34,9 +35,42 @@ export default function Films() {
   };
 
   const renderRightActions = () => (
-    <View style={styles.swipeAction}>
-    </View>
+    <View style={styles.swipeAction}></View>
   );
+
+  const fadeIn = (index) => {
+    if (!fadeAnimations[index]) {
+      fadeAnimations[index] = new Animated.Value(0);
+    }
+    Animated.timing(fadeAnimations[index], {
+      toValue: 1,
+      duration: 500,
+      delay: index * 200,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const renderItem = ({ item, index }) => {
+    fadeIn(index);
+    return (
+      <Animated.View
+        style={{ ...styles.item, opacity: fadeAnimations[index] }}
+      >
+        <Swipeable
+          renderRightActions={renderRightActions}
+          onSwipeableRightOpen={() => handleSwipe(item)}
+        >
+          <View>
+            <Text style={styles.itemTitle}>{item.title}</Text>
+            <Text>Director: {item.director}</Text>
+            <Text>Producer: {item.producer}</Text>
+            <Text>Release Date: {item.release_date}</Text>
+            <Text>{item.opening_crawl}</Text>
+          </View>
+        </Swipeable>
+      </Animated.View>
+    );
+  };
 
   if (loading) {
     return (
@@ -83,20 +117,7 @@ export default function Films() {
       <FlatList
         data={films}
         keyExtractor={(item) => item.title}
-        renderItem={({ item }) => (
-          <Swipeable
-            renderRightActions={renderRightActions}
-            onSwipeableRightOpen={() => handleSwipe(item)}
-          >
-            <View style={styles.item}>
-              <Text style={styles.itemTitle}>{item.title}</Text>
-              <Text>Director: {item.director}</Text>
-              <Text>Producer: {item.producer}</Text>
-              <Text>Release Date: {item.release_date}</Text>
-              <Text>{item.opening_crawl}</Text>
-            </View>
-          </Swipeable>
-        )}
+        renderItem={renderItem}
       />
     </View>
   );

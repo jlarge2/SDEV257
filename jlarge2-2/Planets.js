@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { View, Text, FlatList, StatusBar, ActivityIndicator, TextInput, Button, Modal, Animated } from "react-native";
+import { View, Text, FlatList, StatusBar, ActivityIndicator, TextInput, Button, Modal, Animated, Image } from "react-native";
 import { Swipeable } from "react-native-gesture-handler";
 import styles from "./styles";
 
@@ -100,6 +100,10 @@ export default function Planets() {
 
   return (
     <View style={styles.container}>
+      <Image
+        source={{ uri: "https://lumiere-a.akamaihd.net/v1/images/1-alderaan-bio-1_copy_d2ef86c5.jpeg?region=0%2C0%2C1280%2C550" }}
+        style={styles.image}
+      />
       <StatusBar barStyle="dark-content" />
       <TextInput
         style={styles.searchBar}
@@ -107,7 +111,20 @@ export default function Planets() {
         value={searchText}
         onChangeText={setSearchText}
       />
-      <Button title="Search" onPress={handleSearchSubmit} />
+      <Button
+        title="Search"
+        onPress={() => {
+          const planet = planets.find((planet) =>
+            planet.name.toLowerCase().includes(searchText.toLowerCase())
+          );
+          if (planet) {
+            setSelectedPlanet(planet);
+            setModalVisible(true);
+          } else {
+            alert("Planet not found");
+          }
+        }}
+      />
       <Modal
         animationType="slide"
         transparent={true}

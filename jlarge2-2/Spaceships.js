@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { View, Text, FlatList, StatusBar, ActivityIndicator, TextInput, Button, Modal, Animated } from "react-native";
+import { View, Text, FlatList, StatusBar, ActivityIndicator, TextInput, Button, Modal, Animated, Image } from "react-native";
 import { Swipeable } from "react-native-gesture-handler";
 import styles from "./styles";
 
@@ -47,7 +47,7 @@ export default function Spaceships() {
     Animated.timing(fadeAnimations[index], {
       toValue: 1,
       duration: 500,
-      delay: index * 200, // Add a delay based on the item's index
+      delay: index * 200,
       useNativeDriver: true,
     }).start();
   };
@@ -91,12 +91,30 @@ export default function Spaceships() {
 
   return (
     <View style={styles.container}>
+      <Image
+        source={{ uri: "https://img2.wikia.nocookie.net/__cb20130325050438/starwars/images/d/d4/Hangar_Bay_HF-201.png" }}
+        style={styles.image}
+      />
       <StatusBar barStyle="dark-content" />
       <TextInput
         style={styles.searchBar}
         placeholder="Search..."
         value={searchText}
         onChangeText={setSearchText}
+      />
+      <Button
+        title="Search"
+        onPress={() => {
+          const spaceship = spaceships.find((spaceship) =>
+            spaceship.name.toLowerCase().includes(searchText.toLowerCase())
+          );
+          if (spaceship) {
+            setSelectedSpaceship(spaceship);
+            setModalVisible(true);
+          } else {
+            alert("Spaceship not found");
+          }
+        }}
       />
       <Modal
         animationType="slide"

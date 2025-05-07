@@ -56,4 +56,11 @@ export default StyleSheet.create({
     paddingHorizontal: 20,
     height: "100%",
   },
+  image: {
+    width: "100%",
+    height: 200,
+    resizeMode: "cover",
+    marginBottom: 10,
+    borderRadius: 10,
+  },
 });

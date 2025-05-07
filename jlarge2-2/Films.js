@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { View, Text, FlatList, StatusBar, ActivityIndicator, TextInput, Button, Modal, Animated } from "react-native";
+import { View, Text, FlatList, StatusBar, ActivityIndicator, TextInput, Button, Modal, Animated, Image, ScrollView } from "react-native";
 import { Swipeable } from "react-native-gesture-handler";
 import styles from "./styles";
 
@@ -82,12 +82,30 @@ export default function Films() {
 
   return (
     <View style={styles.container}>
+      <Image
+        source={{ uri: "https://britasia.tv/wp-content/uploads/2018/12/movie-theater-film-reel-background-in-seamless-loop_xk6ivnb9__F0000.png" }}
+        style={styles.image}
+      />
       <StatusBar barStyle="dark-content" />
       <TextInput
         style={styles.searchBar}
         placeholder="Search..."
         value={searchText}
         onChangeText={setSearchText}
+      />
+      <Button
+        title="Search"
+        onPress={() => {
+          const film = films.find((film) =>
+            film.title.toLowerCase().includes(searchText.toLowerCase())
+          );
+          if (film) {
+            setSelectedFilm(film);
+            setModalVisible(true);
+          } else {
+            alert("Film not found");
+          }
+        }}
       />
       <Modal
         animationType="slide"

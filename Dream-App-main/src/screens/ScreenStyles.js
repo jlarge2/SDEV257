@@ -3,14 +3,23 @@ import { StyleSheet } from "react-native";
 const sharedStyles = {
   input: {
     borderWidth: 1,
-    borderColor: "#ccc",
-    padding: 12,
+    borderColor: "#b8E0E2",
+    padding: 16,
     marginBottom: 12,
     borderRadius: 6,
-    color: "#fff",
+    color: "#b8E0E2",
+    backgroundColor: "#001638",
+  },
+  label: {
+    marginBottom: 4,
+    fontWeight: "bold",
+    fontSize: 16, // Slightly larger font size
+    color: "#045e95",
   },
   buttonWrapper: {
     marginTop: 8,
+    backgroundColor: "#B8E0E2",
+    borderRadius: 6,
   },
   backgroundImage: {
     flex: 1,
@@ -23,8 +32,11 @@ const sharedStyles = {
 };
 
 const addDreamStyles = StyleSheet.create({
-  container: {
+  flex: {
     flex: 1,
+  },
+  container: {
+    padding: 30,
   },
   ...sharedStyles,
 });
@@ -40,17 +52,21 @@ const addStoryStyles = StyleSheet.create({
 });
 
 const dreamsScreenStyles = StyleSheet.create({
-  container: {
+  flex: {
     flex: 1,
-    padding: 16,
+  },
+  container: {
+    padding: 30,
   },
   ...sharedStyles,
 });
 
 const editDreamStyles = StyleSheet.create({
-  container: {
+  flex: {
     flex: 1,
-    padding: 16,
+  },
+  container: {
+    padding: 30,
   },
   ...sharedStyles,
 });
@@ -72,7 +88,7 @@ const storiesScreenStyles = StyleSheet.create({
   card: {
     padding: 12,
     marginBottom: 8,
-    backgroundColor: "#e9f1ff", // light blue background
+    backgroundColor: "#B8E0E2", // light blue background
     borderRadius: 8,
   },
   title: {

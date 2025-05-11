@@ -7,9 +7,11 @@ import {
   Button,
   Alert,
   View,
+  ImageBackground,
 } from "react-native";
 import { addStory } from "../api"; // API helper for POST /stories
-import { addStoryStyles as styles } from "./ScreenStyles"; // import styles for AddStoryScreen
+import { addStoryStyles as styles } from "./ScreenStyles"; // Import styles for AddStoryScreen
+import bgpic from "../../assets/bgpic.png"; // Import the background image
 
 export default function AddStoryScreen({ navigation, route }) {
   const dream = route.params?.dream; // dream object passed from DreamsScreen
@@ -69,78 +71,88 @@ export default function AddStoryScreen({ navigation, route }) {
   };
 
   return (
-    <SafeAreaView style={styles.flex}>
-      <ScrollView contentContainerStyle={styles.container}>
-        <Text style={styles.label}>Title:</Text>
-        <TextInput
-          value={title}
-          onChangeText={setTitle}
-          style={styles.input}
-          placeholder="Enter story title"
-        />
+    <ImageBackground source={bgpic} style={styles.backgroundImage}>
+      <SafeAreaView style={styles.containerOverlay}>
+        <ScrollView contentContainerStyle={styles.container}>
+          <Text style={styles.label}>Title:</Text>
+          <TextInput
+            value={title}
+            onChangeText={setTitle}
+            style={styles.input}
+            placeholder="Enter story title"
+            placeholderTextColor="#ccc"
+          />
 
-        <Text style={styles.label}>Story:</Text>
-        <TextInput
-          value={content}
-          onChangeText={setContent}
-          style={[styles.input, { height: 120 }]}
-          placeholder="Write your story..."
-          multiline
-        />
+          <Text style={styles.label}>Story:</Text>
+          <TextInput
+            value={content}
+            onChangeText={setContent}
+            style={[styles.input, { height: 120 }]}
+            placeholder="Write your story..."
+            multiline
+            placeholderTextColor="#ccc"
+          />
 
-        <Text style={styles.label}>Location:</Text>
-        <TextInput
-          value={location}
-          onChangeText={setLocation}
-          style={styles.input}
-          placeholder="Enter location"
-        />
+          <Text style={styles.label}>Location:</Text>
+          <TextInput
+            value={location}
+            onChangeText={setLocation}
+            style={styles.input}
+            placeholder="Enter location"
+            placeholderTextColor="#ccc"
+          />
 
-        <Text style={styles.label}>Time:</Text>
-        <TextInput
-          value={time}
-          onChangeText={setTime}
-          style={styles.input}
-          placeholder="Enter time"
-        />
+          <Text style={styles.label}>Time:</Text>
+          <TextInput
+            value={time}
+            onChangeText={setTime}
+            style={styles.input}
+            placeholder="Enter time"
+            placeholderTextColor="#ccc"
+          />
 
-        <Text style={styles.label}>Emotion:</Text>
-        <TextInput
-          value={emotion}
-          onChangeText={setEmotion}
-          style={styles.input}
-          placeholder="Enter emotion"
-        />
+          <Text style={styles.label}>Emotion:</Text>
+          <TextInput
+            value={emotion}
+            onChangeText={setEmotion}
+            style={styles.input}
+            placeholder="Enter emotion"
+            placeholderTextColor="#ccc"
+          />
 
-        <Text style={styles.label}>People (comma‑separated):</Text>
-        <TextInput
-          value={people}
-          onChangeText={setPeople}
-          style={styles.input}
-          placeholder="e.g. Alice, Bob"
-        />
+          <Text style={styles.label}>People (comma‑separated):</Text>
+          <TextInput
+            value={people}
+            onChangeText={setPeople}
+            style={styles.input}
+            placeholder="e.g. Alice, Bob"
+            placeholderTextColor="#ccc"
+          />
 
-        <Text style={styles.label}>Objects (comma‑separated):</Text>
-        <TextInput
-          value={objects}
-          onChangeText={setObjects}
-          style={styles.input}
-          placeholder="e.g. Key, Book"
-        />
+          <Text style={styles.label}>Objects (comma‑separated):</Text>
+          <TextInput
+            value={objects}
+            onChangeText={setObjects}
+            style={styles.input}
+            placeholder="e.g. Key, Book"
+            placeholderTextColor="#ccc"
+          />
 
-        <Text style={styles.label}>Notes:</Text>
-        <TextInput
-          value={notes}
-          onChangeText={setNotes}
-          style={[styles.input, { height: 80 }]}
-          placeholder="Any additional notes..."
-          multiline
-        />
+          <Text style={styles.label}>Notes:</Text>
+          <TextInput
+            value={notes}
+            onChangeText={setNotes}
+            style={[styles.input, { height: 80 }]}
+            placeholder="Any additional notes..."
+            multiline
+            placeholderTextColor="#ccc"
+          />
 
-        <View style={styles.button}>
-          <Button title="Save Story" onPress={handleSave} />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+          <View style={styles.button}>
+            <Button title="Save Story" onPress={handleSave} />
+          </View>
+        </ScrollView>
+      </SafeAreaView>
+    </ImageBackground>
   );
 }

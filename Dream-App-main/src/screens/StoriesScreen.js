@@ -5,9 +5,11 @@ import {
   Text,
   FlatList,
   RefreshControl,
+  ImageBackground,
 } from "react-native";
 import { getStories } from "../api"; // API helper for GET /stories
 import { storiesScreenStyles as styles } from "./ScreenStyles"; // Import styles
+import bgpic from "../../assets/bgpic.png"; // Import the background image
 
 export default function StoriesScreen() {
   const [stories, setStories] = useState([]); // list of story objects
@@ -55,18 +57,20 @@ export default function StoriesScreen() {
 
   // main render: list of stories with pull‑to‑refresh
   return (
-    <SafeAreaView style={styles.container}>
-      <FlatList
-        data={stories}
-        keyExtractor={(s) => s._id}
-        renderItem={StoryCard}
-        // show placeholder when list is empty
-        ListEmptyComponent={<Text style={styles.empty}>No stories yet…</Text>}
-        // enable pull‑to‑refresh
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-      />
-    </SafeAreaView>
+    <ImageBackground source={bgpic} style={styles.backgroundImage}>
+      <SafeAreaView style={styles.containerOverlay}>
+        <FlatList
+          data={stories}
+          keyExtractor={(s) => s._id}
+          renderItem={StoryCard}
+          // show placeholder when list is empty
+          ListEmptyComponent={<Text style={styles.empty}>No stories yet…</Text>}
+          // enable pull‑to‑refresh
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+        />
+      </SafeAreaView>
+    </ImageBackground>
   );
 }

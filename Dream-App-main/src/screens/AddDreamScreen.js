@@ -5,6 +5,7 @@ import {
   Button,
   Alert,
   View,
+  Text,
   ImageBackground,
 } from "react-native";
 import api from "../api"; // our API helper for HTTP requests
@@ -46,63 +47,79 @@ export default function AddDreamScreen({ navigation }) {
   return (
     <ImageBackground source={bgpic} style={styles.backgroundImage}>
       <SafeAreaView style={styles.containerOverlay}>
+        <Text style={styles.label}>Title:</Text>
         <TextInput
-          placeholder="Title"
+          placeholder="Enter dream title"
           value={title}
           onChangeText={setTitle}
           style={styles.input}
           placeholderTextColor="#ccc"
         />
+
+        <Text style={styles.label}>Climax:</Text>
         <TextInput
-          placeholder="Climax"
+          placeholder="Enter dream climax"
           value={climax}
           onChangeText={setClimax}
           style={styles.input}
           placeholderTextColor="#ccc"
         />
+
+        <Text style={styles.label}>Location:</Text>
         <TextInput
-          placeholder="Location"
+          placeholder="Enter dream location"
           value={location}
           onChangeText={setLocation}
           style={styles.input}
           placeholderTextColor="#ccc"
         />
+
+        <Text style={styles.label}>Time:</Text>
         <TextInput
-          placeholder="Time"
+          placeholder="Enter dream time"
           value={time}
           onChangeText={setTime}
           style={styles.input}
           placeholderTextColor="#ccc"
         />
+
+        <Text style={styles.label}>Emotion:</Text>
         <TextInput
-          placeholder="Emotion"
+          placeholder="Enter dream emotion"
           value={emotion}
           onChangeText={setEmotion}
           style={styles.input}
           placeholderTextColor="#ccc"
         />
+
+        <Text style={styles.label}>People (comma-separated):</Text>
         <TextInput
-          placeholder="People (comma‑separated)"
+          placeholder="e.g. Alice, Bob"
           value={people}
           onChangeText={setPeople}
           style={styles.input}
           placeholderTextColor="#ccc"
         />
+
+        <Text style={styles.label}>Objects (comma-separated):</Text>
         <TextInput
-          placeholder="Objects (comma‑separated)"
+          placeholder="e.g. Key, Book"
           value={objects}
           onChangeText={setObjects}
           style={styles.input}
           placeholderTextColor="#ccc"
         />
+
+        <Text style={styles.label}>Notes:</Text>
         <TextInput
-          placeholder="Notes"
+          placeholder="Any additional notes..."
           value={notes}
           onChangeText={setNotes}
           style={[styles.input, { height: 80 }]}
           multiline
           placeholderTextColor="#ccc"
         />
+
         <View style={styles.buttonWrapper}>
           <Button title="Save Dream" onPress={handleSave} />
         </View>

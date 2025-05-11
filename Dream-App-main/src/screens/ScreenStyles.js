@@ -13,7 +13,7 @@ const sharedStyles = {
   label: {
     marginBottom: 4,
     fontWeight: "bold",
-    fontSize: 16, // Slightly larger font size
+    fontSize: 16,
     color: "#045e95",
   },
   buttonWrapper: {
@@ -30,12 +30,13 @@ const sharedStyles = {
     padding: 16,
   },
     header: {
-    fontSize: 24, // Larger font size for the header
+    fontSize: 40,
     fontWeight: "bold",
-    color: "#DFB204", // Gold-like color for the header
+    color: "#DFB204",
     textAlign: "center",
-    marginBottom: 16, // Add spacing below the header
-    marginTop: 20, // Add spacing above the header
+    marginBottom: 16,
+    marginTop: 20,
+    fontFamily: "cursive",
   },
 };
 
@@ -96,7 +97,7 @@ const storiesScreenStyles = StyleSheet.create({
   card: {
     padding: 12,
     marginBottom: 8,
-    backgroundColor: "#B8E0E2", // light blue background
+    backgroundColor: "#B8E0E2",
     borderRadius: 8,
   },
   title: {

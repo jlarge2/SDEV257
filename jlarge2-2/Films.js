@@ -56,7 +56,7 @@ export default function Films() {
     fadeIn(index);
     return (
       <Animated.View
-        style={{ ...styles.item, opacity: fadeAnimations[index] }}
+        style={{ ...styles.item, opacity: fadeAnimations[index] || 1 }}
       >
         <Swipeable
           renderRightActions={() => renderRightActions(item)}

@@ -1,15 +1,12 @@
 import React, { useEffect, useState, useRef } from "react";
-import { View, Text, FlatList, StatusBar, ActivityIndicator, TextInput, Button, Modal, Animated, Image } from "react-native";
-import { Swipeable } from "react-native-gesture-handler";
+import { View, Text, FlatList, StatusBar, ActivityIndicator, TextInput, Button, Animated, Image } from "react-native";
 import styles from "./styles";
 
 export default function Planets() {
   const [planets, setPlanets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchText, setSearchText] = useState("");
-  const [modalVisible, setModalVisible] = useState(false);
-  const [filteredResults, setFilteredResults] = useState([]);
-  const [selectedPlanet, setSelectedPlanet] = useState(null);
+  const [filteredPlanets, setFilteredPlanets] = useState([]);
   const fadeAnimations = useRef([]).current;
 
   useEffect(() => {
@@ -26,6 +23,7 @@ export default function Planets() {
 
         const detailedPlanets = await Promise.all(fetchDetails);
         setPlanets(detailedPlanets);
+        setFilteredPlanets(detailedPlanets);
       } catch (error) {
         console.error("Error fetching planets:", error);
       } finally {
@@ -35,19 +33,6 @@ export default function Planets() {
 
     fetchPlanets();
   }, []);
-
-  const handleSearchSubmit = () => {
-    const results = planets.filter((planet) =>
-      planet.name.toLowerCase().includes(searchText.toLowerCase())
-    );
-    setFilteredResults(results);
-    setModalVisible(true);
-  };
-
-  const handleSwipe = (planet) => {
-    setSelectedPlanet(planet);
-    setModalVisible(true);
-  };
 
   const fadeIn = (index) => {
     if (!fadeAnimations[index]) {
@@ -61,27 +46,25 @@ export default function Planets() {
     }).start();
   };
 
+  const handleSearch = () => {
+    const filtered = planets.filter((planet) =>
+      planet.name.toLowerCase().includes(searchText.toLowerCase())
+    );
+    setFilteredPlanets(filtered);
+  };
+
   const renderItem = ({ item, index }) => {
     fadeIn(index);
     return (
       <Animated.View
         style={{ ...styles.item, opacity: fadeAnimations[index] }}
       >
-        <Swipeable
-          renderRightActions={renderRightActions}
-          onSwipeableRightOpen={() => handleSwipe(item)}
-        >
-          <View>
-            <Text style={styles.itemTitle}>{item.name}</Text>
-            <Text>Climate: {item.climate}</Text>
-            <Text>Terrain: {item.terrain}</Text>
-            <Text>Population: {item.population}</Text>
-            <Text>Diameter: {item.diameter}</Text>
-            <Text>Gravity: {item.gravity}</Text>
-            <Text>Orbital Period: {item.orbital_period}</Text>
-            <Text>Rotation Period: {item.rotation_period}</Text>
-          </View>
-        </Swipeable>
+        <View>
+          <Text style={styles.itemTitle}>{item.name}</Text>
+          <Text>Climate: {item.climate}</Text>
+          <Text>Terrain: {item.terrain}</Text>
+          <Text>Population: {item.population}</Text>
+        </View>
       </Animated.View>
     );
   };
@@ -93,10 +76,6 @@ export default function Planets() {
       </View>
     );
   }
-
-  const renderRightActions = () => (
-    <View style={styles.swipeAction}></View>
-  );
 
   return (
     <View style={styles.container}>
@@ -111,49 +90,9 @@ export default function Planets() {
         value={searchText}
         onChangeText={setSearchText}
       />
-      <Button
-        title="Search"
-        onPress={() => {
-          const planet = planets.find((planet) =>
-            planet.name.toLowerCase().includes(searchText.toLowerCase())
-          );
-          if (planet) {
-            setSelectedPlanet(planet);
-            setModalVisible(true);
-          } else {
-            alert("Planet not found");
-          }
-        }}
-      />
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}
-      >
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            {selectedPlanet ? (
-              <>
-                <Text style={styles.modalText}>Name: {selectedPlanet.name}</Text>
-                <Text>Climate: {selectedPlanet.climate}</Text>
-                <Text>Terrain: {selectedPlanet.terrain}</Text>
-                <Text>Population: {selectedPlanet.population}</Text>
-                <Text>Diameter: {selectedPlanet.diameter}</Text>
-                <Text>Gravity: {selectedPlanet.gravity}</Text>
-                <Text>Orbital Period: {selectedPlanet.orbital_period}</Text>
-                <Text>Rotation Period: {selectedPlanet.rotation_period}</Text>
-              </>
-            ) : (
-              <Text style={styles.modalText}>No results found.</Text>
-            )}
-            <Button title="Close" onPress={() => setModalVisible(false)} />
-          </View>
-        </View>
-      </Modal>
-      <Text style={styles.title}>Planets</Text>
+      <Button title="Search" onPress={handleSearch} />
       <FlatList
-        data={planets}
+        data={filteredPlanets}
         keyExtractor={(item) => item.name}
         renderItem={renderItem}
       />

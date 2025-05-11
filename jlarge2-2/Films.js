@@ -8,6 +8,7 @@ export default function Films() {
   const [films, setFilms] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchText, setSearchText] = useState("");
+  const [filteredFilms, setFilteredFilms] = useState([]);
   const fadeAnimations = useRef([]).current;
   const navigation = useNavigation();
 
@@ -19,6 +20,7 @@ export default function Films() {
 
         const detailedFilms = data.result.map((film) => film.properties);
         setFilms(detailedFilms);
+        setFilteredFilms(detailedFilms);
       } catch (error) {
         console.error("Error fetching films:", error);
       } finally {
@@ -28,17 +30,6 @@ export default function Films() {
 
     fetchFilms();
   }, []);
-
-  const renderRightActions = (item) => (
-    <View style={styles.swipeAction}>
-      <Button
-        title="Details"
-        onPress={() => {
-          navigation.navigate("FilmsDetails", { film: item });
-        }}
-      />
-    </View>
-  );
 
   const fadeIn = (index) => {
     if (!fadeAnimations[index]) {
@@ -51,6 +42,24 @@ export default function Films() {
       useNativeDriver: true,
     }).start();
   };
+
+  const handleSearch = () => {
+    const filtered = films.filter((film) =>
+      film.title.toLowerCase().includes(searchText.toLowerCase())
+    );
+    setFilteredFilms(filtered);
+  };
+
+  const renderRightActions = (item) => (
+    <View style={styles.swipeAction}>
+      <Text
+        style={styles.swipeText}
+        onPress={() => navigation.navigate("FilmsDetails", { film: item })}
+      >
+        Details
+      </Text>
+    </View>
+  );
 
   const renderItem = ({ item, index }) => {
     fadeIn(index);
@@ -97,9 +106,10 @@ export default function Films() {
         value={searchText}
         onChangeText={setSearchText}
       />
+      <Button title="Search" onPress={handleSearch} />
       <Text style={styles.title}>Films</Text>
       <FlatList
-        data={films}
+        data={filteredFilms}
         keyExtractor={(item) => item.title}
         renderItem={renderItem}
       />

@@ -59,6 +59,9 @@ export default function StoriesScreen() {
   return (
     <ImageBackground source={bgpic} style={styles.backgroundImage}>
       <SafeAreaView style={styles.containerOverlay}>
+        {/* Header */}
+        <Text style={styles.header}>Stories</Text>
+
         <FlatList
           data={stories}
           keyExtractor={(s) => s._id}

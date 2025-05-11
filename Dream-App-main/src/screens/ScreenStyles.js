@@ -29,6 +29,14 @@ const sharedStyles = {
     flex: 1,
     padding: 16,
   },
+    header: {
+    fontSize: 24, // Larger font size for the header
+    fontWeight: "bold",
+    color: "#DFB204", // Gold-like color for the header
+    textAlign: "center",
+    marginBottom: 16, // Add spacing below the header
+    marginTop: 20, // Add spacing above the header
+  },
 };
 
 const addDreamStyles = StyleSheet.create({

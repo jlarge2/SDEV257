@@ -74,6 +74,9 @@ export default function AddStoryScreen({ navigation, route }) {
     <ImageBackground source={bgpic} style={styles.backgroundImage}>
       <SafeAreaView style={styles.containerOverlay}>
         <ScrollView contentContainerStyle={styles.container}>
+          {/* Header */}
+          <Text style={styles.header}>Add A New Story</Text>
+
           <Text style={styles.label}>Title:</Text>
           <TextInput
             value={title}

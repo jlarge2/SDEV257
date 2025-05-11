@@ -7,6 +7,7 @@ import {
   View,
   Text,
   ImageBackground,
+  ScrollView,
 } from "react-native";
 import api from "../api"; // our API helper for HTTP requests
 import { addDreamStyles as styles } from "./ScreenStyles"; // Import styles
@@ -47,82 +48,87 @@ export default function AddDreamScreen({ navigation }) {
   return (
     <ImageBackground source={bgpic} style={styles.backgroundImage}>
       <SafeAreaView style={styles.containerOverlay}>
-        <Text style={styles.label}>Title:</Text>
-        <TextInput
-          placeholder="Enter dream title"
-          value={title}
-          onChangeText={setTitle}
-          style={styles.input}
-          placeholderTextColor="#ccc"
-        />
+        <ScrollView contentContainerStyle={styles.scrollContainer}>
+          {/* Header */}
+          <Text style={styles.header}>Add A New Dream</Text>
 
-        <Text style={styles.label}>Climax:</Text>
-        <TextInput
-          placeholder="Enter dream climax"
-          value={climax}
-          onChangeText={setClimax}
-          style={styles.input}
-          placeholderTextColor="#ccc"
-        />
+          <Text style={styles.label}>Title:</Text>
+          <TextInput
+            placeholder="Enter dream title"
+            value={title}
+            onChangeText={setTitle}
+            style={styles.input}
+            placeholderTextColor="#ccc"
+          />
 
-        <Text style={styles.label}>Location:</Text>
-        <TextInput
-          placeholder="Enter dream location"
-          value={location}
-          onChangeText={setLocation}
-          style={styles.input}
-          placeholderTextColor="#ccc"
-        />
+          <Text style={styles.label}>Climax:</Text>
+          <TextInput
+            placeholder="Enter dream climax"
+            value={climax}
+            onChangeText={setClimax}
+            style={styles.input}
+            placeholderTextColor="#ccc"
+          />
 
-        <Text style={styles.label}>Time:</Text>
-        <TextInput
-          placeholder="Enter dream time"
-          value={time}
-          onChangeText={setTime}
-          style={styles.input}
-          placeholderTextColor="#ccc"
-        />
+          <Text style={styles.label}>Location:</Text>
+          <TextInput
+            placeholder="Enter dream location"
+            value={location}
+            onChangeText={setLocation}
+            style={styles.input}
+            placeholderTextColor="#ccc"
+          />
 
-        <Text style={styles.label}>Emotion:</Text>
-        <TextInput
-          placeholder="Enter dream emotion"
-          value={emotion}
-          onChangeText={setEmotion}
-          style={styles.input}
-          placeholderTextColor="#ccc"
-        />
+          <Text style={styles.label}>Time:</Text>
+          <TextInput
+            placeholder="Enter dream time"
+            value={time}
+            onChangeText={setTime}
+            style={styles.input}
+            placeholderTextColor="#ccc"
+          />
 
-        <Text style={styles.label}>People (comma-separated):</Text>
-        <TextInput
-          placeholder="e.g. Alice, Bob"
-          value={people}
-          onChangeText={setPeople}
-          style={styles.input}
-          placeholderTextColor="#ccc"
-        />
+          <Text style={styles.label}>Emotion:</Text>
+          <TextInput
+            placeholder="Enter dream emotion"
+            value={emotion}
+            onChangeText={setEmotion}
+            style={styles.input}
+            placeholderTextColor="#ccc"
+          />
 
-        <Text style={styles.label}>Objects (comma-separated):</Text>
-        <TextInput
-          placeholder="e.g. Key, Book"
-          value={objects}
-          onChangeText={setObjects}
-          style={styles.input}
-          placeholderTextColor="#ccc"
-        />
+          <Text style={styles.label}>People (comma-separated):</Text>
+          <TextInput
+            placeholder="e.g. Alice, Bob"
+            value={people}
+            onChangeText={setPeople}
+            style={styles.input}
+            placeholderTextColor="#ccc"
+          />
 
-        <Text style={styles.label}>Notes:</Text>
-        <TextInput
-          placeholder="Any additional notes..."
-          value={notes}
-          onChangeText={setNotes}
-          style={[styles.input, { height: 80 }]}
-          multiline
-          placeholderTextColor="#ccc"
-        />
+          <Text style={styles.label}>Objects (comma-separated):</Text>
+          <TextInput
+            placeholder="e.g. Key, Book"
+            value={objects}
+            onChangeText={setObjects}
+            style={styles.input}
+            placeholderTextColor="#ccc"
+          />
 
-        <View style={styles.buttonWrapper}>
-          <Button title="Save Dream" onPress={handleSave} />
-        </View>
+          <Text style={styles.label}>Notes:</Text>
+          <TextInput
+            placeholder="Any additional notes..."
+            value={notes}
+            onChangeText={setNotes}
+            style={[styles.input, { height: 80 }]}
+            multiline
+            placeholderTextColor="#ccc"
+          />
+
+          <View style={styles.buttonWrapper}>
+            <Button title="Save Dream" onPress={handleSave} />
+          </View>
+        </ScrollView>
       </SafeAreaView>
     </ImageBackground>
   );

@@ -93,6 +93,9 @@ export default function DreamsScreen({ navigation }) {
           resizeMode="cover"
         >
           <View style={styles.containerOverlay}>
+            {/* Header */}
+            <Text style={styles.header}>Dreams</Text>
+
             <FlatList
               data={dreams}
               keyExtractor={(d) => d._id}
